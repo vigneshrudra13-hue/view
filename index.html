@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arena Breakout — Visual Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Teko:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-deep:    #080a07;
+      --bg-mid:     #0f120d;
+      --bg-panel:   #141810;
+      --olive:      #6b8c32;
+      --olive-dim:  #3e5420;
+      --khaki:      #b8a96a;
+      --khaki-dim:  #7a6e42;
+      --text:       #cccbb8;
+      --text-dim:   #7a7a68;
+      --border:     #1e2418;
+      --border-lit: #2e3624;
+      --red:        #8c3232;
+      --scan-color: rgba(107, 140, 50, 0.03);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+      opacity: 0.6;
+    }
+
+    /* ── SCANLINES ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 3px,
+        var(--scan-color) 3px,
+        var(--scan-color) 4px
+      );
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 48px;
+      background: rgba(8, 10, 7, 0.92);
+      border-bottom: 1px solid var(--border-lit);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topbar-tag {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      color: var(--olive);
+    }
+
+    .topbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-lit);
+    }
+
+    .topbar-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--olive);
+      box-shadow: 0 0 6px var(--olive);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    .topbar-nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    .topbar-nav a {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .topbar-nav a:hover { color: var(--khaki); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 48px 0 0;
+      overflow: hidden;
+    }
+
+    .hero-image-wrap {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hero-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      filter: saturate(0.5) brightness(0.45);
+    }
+
+    .hero-image-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, var(--bg-deep) 0%, rgba(8,10,7,0.6) 45%, transparent 100%),
+        linear-gradient(to right, rgba(8,10,7,0.7) 0%, transparent 60%);
+    }
+
+    /* Corner brackets */
+    .hero-bracket {
+      position: absolute;
+      z-index: 2;
+      width: 36px;
+      height: 36px;
+    }
+
+    .hero-bracket--tl {
+      top: 68px;
+      left: 32px;
+      border-top: 1px solid var(--olive-dim);
+      border-left: 1px solid var(--olive-dim);
+    }
+
+    .hero-bracket--tr {
+      top: 68px;
+      right: 32px;
+      border-top: 1px solid var(--olive-dim);
+      border-right: 1px solid var(--olive-dim);
+    }
+
+    .hero-bracket--bl {
+      bottom: 0;
+      left: 32px;
+      border-bottom: 1px solid var(--olive-dim);
+      border-left: 1px solid var(--olive-dim);
+    }
+
+    .hero-bracket--br {
+      bottom: 0;
+      right: 32px;
+      border-bottom: 1px solid var(--olive-dim);
+      border-right: 1px solid var(--olive-dim);
+    }
+
+    /* Targeting reticle */
+    .reticle {
+      position: absolute;
+      top: 50%;
+      left: 62%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 80px;
+      height: 80px;
+      opacity: 0.25;
+    }
+
+    .reticle::before,
+    .reticle::after {
+      content: '';
+      position: absolute;
+      border: 1px solid var(--olive);
+    }
+
+    .reticle::before {
+      inset: 12px;
+      border-radius: 50%;
+    }
+
+    .reticle::after {
+      inset: 0;
+      clip-path: polygon(
+        0 38%, 30% 38%,
+        30% 30%, 38% 30%,
+        38% 0,
+        62% 0, 62% 30%,
+        70% 30%, 70% 38%,
+        100% 38%, 100% 62%,
+        70% 62%, 70% 70%,
+        62% 70%, 62% 100%,
+        38% 100%, 38% 70%,
+        30% 70%, 30% 62%,
+        0 62%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      padding: 64px 32px 56px;
+      max-width: 680px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--olive);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-eyebrow::before {
+      content: '▶';
+      font-size: 7px;
+      color: var(--olive);
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 8vw, 100px);
+      line-height: 0.92;
+      letter-spacing: 0.04em;
+      color: #e8e4d4;
+      margin-bottom: 8px;
+    }
+
+    .hero-title span {
+      color: var(--khaki);
+      display: block;
+    }
+
+    .hero-subtitle {
+      font-family: 'Teko', sans-serif;
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 20px;
+      max-width: 460px;
+    }
+
+    .hero-meta {
+      position: absolute;
+      right: 32px;
+      bottom: 56px;
+      z-index: 3;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hero-meta-line {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--text-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      position: relative;
+      z-index: 2;
+      padding: 0 32px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding: 48px 0 24px;
+    }
+
+    .section-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 11px;
+      color: var(--olive);
+      letter-spacing: 0.2em;
+    }
+
+    .section-title {
+      font-family: 'Teko', sans-serif;
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .section-rule {
+      flex: 1;
+      height: 1px;
+      background: var(--border-lit);
+    }
+
+    /* ── BRIEFING GRID ── */
+    .briefing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .brief-cell {
+      background: var(--bg-panel);
+      padding: 24px 28px;
+    }
+
+    .brief-cell--wide {
+      grid-column: span 2;
+    }
+
+    .brief-cell--accent {
+      border-left: 2px solid var(--olive-dim);
+    }
+
+    .cell-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--olive);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .cell-value {
+      font-family: 'Teko', sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.06em;
+      line-height: 1.3;
+    }
+
+    .cell-body {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    /* ── TAG LIST ── */
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border: 1px solid var(--border-lit);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--text-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .tag:hover {
+      border-color: var(--olive-dim);
+      color: var(--khaki);
+      background: rgba(107, 140, 50, 0.05);
+    }
+
+    .tag--active {
+      border-color: var(--olive-dim);
+      color: var(--olive);
+      background: rgba(107, 140, 50, 0.08);
+    }
+
+    /* ── WIDE IMAGE STRIP ── */
+    .image-strip {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      overflow: hidden;
+      margin: 48px 0;
+      border: 1px solid var(--border);
+    }
+
+    .image-strip img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+      filter: saturate(0.6) brightness(0.6);
+      transition: transform 0.8s ease, filter 0.6s ease;
+    }
+
+    .image-strip:hover img {
+      transform: scale(1.03);
+      filter: saturate(0.75) brightness(0.7);
+    }
+
+    .image-strip-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(8,10,7,0.6) 0%,
+        transparent 50%,
+        rgba(8,10,7,0.4) 100%
+      );
+    }
+
+    .image-strip-label {
+      position: absolute;
+      bottom: 20px;
+      left: 24px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--khaki-dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .image-strip-counter {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: rgba(107, 140, 50, 0.15);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── ATTRIBUTES ROW ── */
+    .attributes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .attribute {
+      background: var(--bg-panel);
+      padding: 20px 24px;
+    }
+
+    .attribute-bar-wrap {
+      margin-top: 10px;
+      height: 2px;
+      background: var(--border-lit);
+      overflow: hidden;
+    }
+
+    .attribute-bar {
+      height: 100%;
+      background: var(--olive);
+      transform-origin: left;
+      animation: barFill 1.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes barFill {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    .attribute-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--khaki);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    /* ── CTA BLOCK ── */
+    .cta-block {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 36px 40px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-lit);
+      margin: 48px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--olive);
+    }
+
+    .cta-block::after {
+      content: 'ARENA BREAKOUT';
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 56px;
+      color: rgba(107, 140, 50, 0.05);
+      letter-spacing: 0.06em;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .cta-text-group {
+      flex: 1;
+    }
+
+    .cta-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--olive);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .cta-heading {
+      font-family: 'Teko', sans-serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.1em;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      background: transparent;
+      border: 1px solid var(--olive);
+      color: var(--olive);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--olive);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+
+    .cta-btn:hover::before {
+      transform: translateX(0);
+    }
+
+    .cta-btn:hover {
+      color: var(--bg-deep);
+    }
+
+    .cta-btn-arrow {
+      font-size: 14px;
+      transition: transform 0.25s ease;
+    }
+
+    .cta-btn:hover .cta-btn-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 24px 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-left {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--text-dim);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-coord {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+    }
+
+    /* ── ENTRY ANIMATION ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .topbar-nav { display: none; }
+      .hero-content { padding: 48px 24px 40px; }
+      .hero-meta { display: none; }
+      .main { padding: 0 20px 60px; }
+      .briefing-grid { grid-template-columns: 1fr; }
+      .brief-cell--wide { grid-column: span 1; }
+      .attributes { grid-template-columns: repeat(2, 1fr); }
+      .cta-block { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .reticle { display: none; }
+      .footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-tag">AB — REF</span>
+      <div class="topbar-divider"></div>
+      <span class="topbar-label">Visual Reference Document</span>
+    </div>
+    <div class="topbar-right">
+      <div class="status-dot"></div>
+      <nav class="topbar-nav">
+        <a href="#briefing">Briefing</a>
+        <a href="#visual">Visual</a>
+        <a href="#link">Access</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-image-wrap">
+      <img
+        src="https://m.media-amazon.com/images/M/MV5BYTQ2YTNlNWQtOWU2OC00MjM3LThlMjAtMjMzMmUwMTY5NmQ4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+        alt="Arena Breakout — Game Visual"
+        loading="eager"
+      />
+    </div>
+
+    <div class="hero-bracket hero-bracket--tl"></div>
+    <div class="hero-bracket hero-bracket--tr"></div>
+    <div class="hero-bracket hero-bracket--bl"></div>
+    <div class="hero-bracket hero-bracket--br"></div>
+    <div class="reticle"></div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow fade-up" style="--delay:0.1s">Primary Reference / Interior + Textures</p>
+      <h1 class="hero-title fade-up" style="--delay:0.25s">
+        Arena
+        <span>Breakout</span>
+      </h1>
+      <p class="hero-subtitle fade-up" style="--delay:0.4s">
+        Reference Document — Interior Environments &amp; Surface Texture Study
+      </p>
+    </div>
+
+    <div class="hero-meta fade-up" style="--delay:0.6s">
+      <span class="hero-meta-line">CLASSIFICATION: REFERENCE</span>
+      <span class="hero-meta-line">CATEGORY: VISUAL DESIGN</span>
+      <span class="hero-meta-line">PLATFORM: MOBILE / TACTICAL</span>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- BRIEFING SECTION -->
+    <div id="briefing">
+      <div class="section-header fade-up" style="--delay:0.05s">
+        <span class="section-number">01 //</span>
+        <span class="section-title">Operational Briefing</span>
+        <div class="section-rule"></div>
+      </div>
+
+      <div class="briefing-grid fade-up" style="--delay:0.1s">
+        <div class="brief-cell brief-cell--accent">
+          <p class="cell-label">Primary Reference</p>
+          <p class="cell-value">Arena Breakout</p>
+          <div class="tag-list">
+            <span class="tag tag--active">Extraction Shooter</span>
+            <span class="tag">Mobile</span>
+            <span class="tag">Tactical</span>
+          </div>
+        </div>
+
+        <div class="brief-cell">
+          <p class="cell-label">Reference Focus Areas</p>
+          <p class="cell-value">Interior Design + Texture Work</p>
+          <div class="tag-list">
+            <span class="tag tag--active">Surface Textures</span>
+            <span class="tag tag--active">Interior Spaces</span>
+            <span class="tag">Lighting</span>
+            <span class="tag">Material Wear</span>
+          </div>
+        </div>
+
+        <div class="brief-cell brief-cell--wide">
+          <p class="cell-label">Reference Notes</p>
+          <p class="cell-body">
+            Arena Breakout serves as the primary visual reference for interior environment design and texture development.
+            The game's gritty, military-industrial aesthetic — marked by worn surfaces, layered environmental storytelling, and
+            high-fidelity detail on degraded materials — provides the foundational language for interior texture work.
+            Key takeaways include the handling of concrete, metal oxidation, worn fabric, and mixed-material transitions.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISUAL ATTRIBUTES -->
+    <div id="visual">
+      <div class="section-header fade-up" style="--delay:0.05s">
+        <span class="section-number">02 //</span>
+        <span class="section-title">Visual Attributes</span>
+        <div class="section-rule"></div>
+      </div>
+
+      <div class="attributes fade-up" style="--delay:0.15s">
+        <div class="attribute">
+          <p class="cell-label">Texture Fidelity</p>
+          <p class="attribute-value">9.4</p>
+          <div class="attribute-bar-wrap">
+            <div class="attribute-bar" style="--delay:0.3s; width: 94%;"></div>
+          </div>
+        </div>
+        <div class="attribute">
+          <p class="cell-label">Interior Complexity</p>
+          <p class="attribute-value">8.7</p>
+          <div class="attribute-bar-wrap">
+            <div class="attribute-bar" style="--delay:0.45s; width: 87%;"></div>
+          </div>
+        </div>
+        <div class="attribute">
+          <p class="cell-label">Material Diversity</p>
+          <p class="attribute-value">7.2</p>
+          <div class="attribute-bar-wrap">
+            <div class="attribute-bar" style="--delay:0.6s; width: 72%;"></div>
+          </div>
+        </div>
+        <div class="attribute">
+          <p class="cell-label">Atmosphere / Mood</p>
+          <p class="attribute-value">9.1</p>
+          <div class="attribute-bar-wrap">
+            <div class="attribute-bar" style="--delay:0.75s; width: 91%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WIDE IMAGE -->
+      <div class="image-strip fade-up" style="--delay:0.2s">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYTQ2YTNlNWQtOWU2OC00MjM3LThlMjAtMjMzMmUwMTY5NmQ4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Arena Breakout — Full Screenshot"
+        />
+        <div class="image-strip-overlay"></div>
+        <p class="image-strip-label">Source Image — Arena Breakout Official Media</p>
+        <p class="image-strip-counter">AB</p>
+      </div>
+
+      <div class="briefing-grid fade-up" style="--delay:0.1s">
+        <div class="brief-cell">
+          <p class="cell-label">Key Texture Types</p>
+          <div class="tag-list">
+            <span class="tag tag--active">Aged Concrete</span>
+            <span class="tag tag--active">Oxidised Metal</span>
+            <span class="tag">Worn Fabric</span>
+            <span class="tag">Cracked Plaster</span>
+            <span class="tag">Rust Streaks</span>
+            <span class="tag">Paint Chipping</span>
+            <span class="tag">Dirt Accumulation</span>
+          </div>
+        </div>
+
+        <div class="brief-cell">
+          <p class="cell-label">Interior Environment Types</p>
+          <div class="tag-list">
+            <span class="tag tag--active">Warehouse Interiors</span>
+            <span class="tag tag--active">Military Compounds</span>
+            <span class="tag">Underground Passages</span>
+            <span class="tag">Urban Ruins</span>
+            <span class="tag">Storage Facilities</span>
+            <span class="tag">Enclosed Corridors</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCESS LINK -->
+    <div id="link">
+      <div class="cta-block fade-up" style="--delay:0.1s">
+        <div class="cta-text-group">
+          <p class="cta-label">External Reference // Official Source</p>
+          <p class="cta-heading">Access Arena Breakout</p>
+        </div>
+        <a href="https://arenabreakout.com/#/" target="_blank" rel="noopener noreferrer" class="cta-btn">
+          Launch Site
+          <span class="cta-btn-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-left">Arena Breakout — Visual Reference Document</span>
+    <div class="footer-right">
+      <span class="footer-coord">REF.DOC / INT.TEX</span>
+      <span class="footer-coord">STATUS: ACTIVE</span>
+    </div>
+  </footer>
+
+</body>
+</html>
