@@ -1,15 +1,14 @@
 body {
   margin-left: 20px;
-  background-image: url("https://img.pikbest.com/wp/202343/decay-decaying-beauty-the-textured-metal-wall-with-a-deteriorating-paint-coating_9976757.jpg!w700wp");
+  background-image: url("https://res.cloudinary.com/dmek3nvbi/image/upload/v1783963412/download_dducik.jpg");
+  background-repeat: no-repeat;
   background-size: cover;
-  background-repeat: repeat;
-  background-position: center;
   background-attachment: fixed;
   font-family: Georgia, "Times New Roman", Times, serif;
-  color:;
 }
 
 #hi {
+  color: brown;
   margin-left: 50px;
   text-align: center;
   text-decoration-line: overline underline;
@@ -32,4 +31,7 @@ td {
 }
 tr:hover {
   background-color: aqua;
+}
+h2 {
+  color: crimson;
 }
