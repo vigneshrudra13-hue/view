@@ -1,0 +1,35 @@
+body {
+  margin-left: 20px;
+  background-image: url("https://img.pikbest.com/wp/202343/decay-decaying-beauty-the-textured-metal-wall-with-a-deteriorating-paint-coating_9976757.jpg!w700wp");
+  background-size: cover;
+  background-repeat: repeat;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color:;
+}
+
+#hi {
+  margin-left: 50px;
+  text-align: center;
+  text-decoration-line: overline underline;
+}
+table {
+  margin-left: 36.5%;
+  color: black;
+}
+mark.kla {
+  font-family:
+    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+    Arial, sans-serif;
+}
+table,
+th,
+td {
+  border: 3px solid;
+  width: 30%;
+  border-collapse: collapse;
+}
+tr:hover {
+  background-color: aqua;
+}
