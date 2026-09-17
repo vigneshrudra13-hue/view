@@ -1,37 +1,41 @@
 body {
-  margin-left: 20px;
-  background-image: url("https://res.cloudinary.com/dmek3nvbi/image/upload/v1783963412/download_dducik.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  font-family: Georgia, "Times New Roman", Times, serif;
+  background-color: darkblue;
 }
 
-#hi {
-  color: brown;
-  margin-left: 50px;
-  text-align: center;
-  text-decoration-line: overline underline;
+#text {
+  background-color: black;
+  color: white;
+  padding: 10px;
 }
-table {
-  margin-left: 36.5%;
+
+#game {
+  max-width: 500px;
+  max-height: 400px;
+  background-color: lightgray;
+  color: white;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+#controls {
+  border: 1px black solid;
+  padding: 5px;
+}
+
+#stats {
+  border: 1px black solid;
   color: black;
+  padding: 5px;
 }
-mark.kla {
-  font-family:
-    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
-    Arial, sans-serif;
+
+#monsterStats {
+  display: none;
+  border: 1px black solid;
+  color: white;
+  padding: 5px;
+  background-color: red;
 }
-table,
-th,
-td {
-  border: 3px solid;
-  width: 30%;
-  border-collapse: collapse;
-}
-tr:hover {
-  background-color: aqua;
-}
-h2 {
-  color: crimson;
+
+.stat {
+  padding-right: 10px;
 }
