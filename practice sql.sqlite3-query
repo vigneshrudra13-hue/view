@@ -1,0 +1,96 @@
+-- database: C:\MinGW\bin\vs code\frontend\view\test.db
+-- database: 
+INSERT INTO bus (id, name, destination, source) VALUES (7, 'ktm390x+','hyderabad','himachal');
+
+update trips set name = 'r1300gsa' WHERE id>3; 
+--adding column
+ALTER TABLE bus ADD COLUMN price REAL NOT NULL DEFAULT 0;
+UPDATE bus SET price = 30065.18 WHERE id = 7;
+
+--chaining queries
+SELECT * from bus where name in (select DISTINCT name from bus where price>5000); 
+SELECT id ||':-'|| upper(name) || '-' || upper(destination) FROM bus;
+SELECT * from bus where price in (SELECT distinct price from bus where name = 'ktm390x+');  
+
+SELECT destination, count(*) as numberoftrips from trips where name ='ktm390x+' GROUP BY destination; 
+
+SELECT name, sum(price) as totalcharges from trips where name like 'k%'; 
+
+
+
+UPDATE trips
+SET date = '2027-05-3'
+WHERE id = 1;
+
+DELETE FROM trips
+WHERE date ='13-09-2027' ;
+
+
+
+CREATE TABLE expenses (
+    id INTEGER PRIMARY KEY,
+    place TEXT NOT NULL,
+    amount TEXT UNIQUE,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE Passenger (
+PNR_No INTEGER PRIMARY KEY,
+Passenger_Name TEXT not NULL,
+Age INTEGER,
+Gender text,
+Ticket_No INTEGER,
+Address text(50),
+Phone_No text(50)
+);
+
+
+
+CREATE TABLE Passengers_1NF (
+PNR_No INTEGER,
+Passenger_Name TEXT(20),
+Age INTEGER,
+Gender TEXT(1),
+Ticket_No INTEGER,
+Address TEXT(50),
+Phone_No TEXT(15)
+);
+
+
+
+
+CREATE TABLE Passenger_2NF (
+Passenger_ID INTEGER PRIMARY KEY,
+Passenger_Name TEXT(20),
+Age INTEGER,
+Gender TEXT(1),
+Address TEXT(50)
+);
+
+CREATE TABLE Passenger_Phone_2NF (
+Passenger_ID INTEGER,
+Phone_No TEXT(15),
+FOREIGN KEY (Passenger_ID) REFERENCES Passenger_2NF(Passenger_ID)
+);
+
+CREATE TABLE Ticket_2NF (
+Ticket_No INTEGER PRIMARY KEY,
+Passenger_ID INTEGER,
+FOREIGN KEY (Passenger_ID) REFERENCES Passenger_2NF(Passenger_ID)
+);
+
+
+
+create VIEW realgoal AS SELECT * from trips where name='r1300gsa' 
+
